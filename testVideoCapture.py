@@ -57,6 +57,11 @@ class MainWindow():
         self.window.after(self.interval, self.update_image)
         # self.canvas = tk.Canvas(self.window, width = self.width, height = self.height)
         # self.canvas.pack()
+    def rescale_frame(frame, percent=30):
+        width = int(frame.shape[1] * percent / 100)
+        height = int(frame.shape[0] * percent / 100)
+        dim = (width, height)
+        return cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
 if __name__ == "__main__":
     root = tk.Tk()
     MainWindow(root, cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV"))
