@@ -1,120 +1,126 @@
-# from tkinter import *
-# import time
-# from PIL import ImageTk, Image
-# import pyautogui as pg
-# import cv2
-import tkinter as tk
-from PIL import Image, ImageTk
+# # from tkinter import *
+# # import time
+# # from PIL import ImageTk, Image
+import pyautogui as pg
+# # import cv2
+# import tkinter as tk
+# from PIL import Image, ImageTk
 import cv2
-  
+import tkinter as tk
 
-# # Create an instance of tkinter frame or window
-# win = tk()
 
-# # # Set the size of the window
-# tk.geometry("700x350")
+root = tk.Tk() # create a Tk root window
+master = tk.Tk()
 
-# # # Define a function for taking screenshot
-# def screenshot():
-#     random = int(time.time())
-#     video = cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV")
-#     ss = pg.screenshot(video)
-#     ss.show()
-#     tk.deiconify()
+w = 400 # width for the Tk root
+h = 500 # height for the Tk root
 
-# def hide_window():
-#     # hiding the tkinter window while taking the screenshot
-#     tk.withdraw()
-#     tk.after(1000, screenshot)
+# get screen width and height
+ws = root.winfo_screenwidth() # width of the screen
+hs = root.winfo_screenheight() # height of the screen
 
-# # # Add a Label widget
-#     Label(tk, text="Click the Button to Take the Screenshot", font=('Times New Roman', 18, 'bold')).pack(pady=10)
+# calculate x and y coordinates for the Tk root window
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
 
-# # # Create a Button to take the screenshots
-# button = Button(tk, text="Take Screenshot", font=('Aerial 11 bold'), background="#aa7bb1", foreground="white", command=hide_window)
-# button.pack(pady=20)
+# set the dimensions of the screen 
+# and where it is placed
+root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-#win.mainloop()
-# class MainWindow():
-#     def __init__(self, window, cap):
-#         self.window = window
-#         self.cap = cap
-#         self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-#         self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-#         self.interval = 20 # Interval in ms to get the latest frame
-#         # Create canvas for image
-#         self.canvas = tk.Canvas(self.window, width=self.width, height=self.height)
-#         self.canvas.grid(row=0, column=0)
-#         # Update image on canvas
-#         self.update_image()
-#     def update_image(self):
-#         # Get the latest frame and convert image format
-#         self.image = cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB) # to RGB
-#         self.image = Image.fromarray(self.image) # to PIL format
-#         self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
-#         # Update image
-#         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
-#         # Repeat every 'interval' ms
-#         self.window.after(self.interval, self.update_image)
-#         # self.canvas = tk.Canvas(self.window, width = self.width, height = self.height)
-#         # self.canvas.pack()
-#     def rescale_frame(frame, percent=30):
-        # width = int(frame.shape[1] * percent / 100)
-        # height = int(frame.shape[0] * percent / 100)
-        # dim = (width, height)
-        # return cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
-# if __name__ == "__main__":
-#     root = tk.Tk()
-#     MainWindow(root, cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV"))
-#     root.mainloop()
+#name video variable
+video = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
 
-class MainWindow():
-    def __init__(self, window, cap):
-        self.window = window
-        self.cap = cap
-        self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-        self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        self.interval = 20 # Interval in ms to get the latest frame
-        # Create canvas for image
-        self.canvas = tk.Canvas(self.window, width=self.width, height=self.height)
-        self.canvas.grid(row=0, column=0)
-        # Update image on canvas
-        self.update_image()
-    def update_image(self):
-        # Get the latest frame and convert image format
-        self.image = cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB) # to RGB
-        self.image = Image.fromarray(self.image) # to PIL format
-        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
-        #print("blue")
-        # Update image
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
-        # Repeat every 'interval' ms
-        self.window.after(self.interval, self.update_image)
-        #height, width, _ = frame.shape
+if (video.isOpened() == False):
+    print("Error opening the video file")
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.title('videoCapture :)')
-    root.geometry('600x800')
+while(video.isOpened()):
+    ret, frame = video.read()
+    if ret == True:
+        # Using waitKey to display each frame of the video for 1 ms
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+             break
+        # Get the current frame size
+        height, width, _ = frame.shape
+        # Resize the frame
+        scale_percent = 50
+        new_width = int(width * scale_percent / 120)
+        new_height = int(height * scale_percent / 150)
+        dim = (new_width, new_height)
+        resized = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
+        print("new wdith, new hgiht", new_width, new_height)
 
-    ##RESIZE
-    video = cv2.VideoCapture("C:/Users/rosar/Downloads/IMG_7709.MOV")
+        video_bars = cv2.line(resized, (80, 310), (162, 310), (0, 0, 255), 10) 
 
-    resized = video.resize((600, 800), Image.AN)
+        video_two_bars = cv2.line(video_bars, (295, 310), (377, 310), (0, 0, 255), 10)
+        cv2.imshow('with 2 bars', video_two_bars)
 
-    # window_width = 300
-    # window_height = 200
+        #canvas1 is the window that has the ss button
+        canvas1 = tk.Canvas(width = 300, height = 300)
+        canvas1.pack()
 
-    # # get the screen dimension
-    # screen_width = root.winfo_screenwidth()
-    # screen_height = root.winfo_screenheight()
+        #if q is pressed, stop program
+        if key == ord('q'):
+             break
+        
+        #ss function
+        def screenshot():
+            #trying to get region of video window
+            x, y = root.winfo_x(), root.winfo_y()
+            w, h = root.winfo_width(), root.winfo_height()
+            #geometry_string = root.geometry()
+            #print("geometry_string", geometry_string)
+            pg.screenshot('screenshot.png', region=(x, y, w, h))
+            myScreenshot = pg.screenshot()
+            myScreenshot.save('screenshot.png')
+            print("*******************x y w h ", x, y, w, h)
 
-    # # find the center point
-    # center_x = int(screen_width/2 - window_width / 2)
-    # center_y = int(screen_height/2 - window_height / 2)
+        def hide_window():
+            # hiding the tkinter window while taking the screenshot
+            root.withdraw()
+            root.after(1000, screenshot)
 
-    # # set the position of the window to the center of the screen
-    # root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
-    #root.state('zoomed')
-    MainWindow(root, cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV"))
-    root.mainloop()
+        # # Add a Label widget
+            tk.Label(tk, text="Click the Button to Take the Screenshot", font=('Times New Roman', 18, 'bold')).pack(pady=10)
+
+
+        # # # Create a Button to take the screenshots 
+        myButton = tk.Button(text='Take Screenshot', command=screenshot, bg='green',fg='white',font= 10)
+        canvas1.create_window(150, 150, window=myButton)
+
+def openNewWindow():
+     
+    # Toplevel object which will 
+    # be treated as a new window
+    newWindow = tk.Toplevel(master)
+ 
+    # sets the title of the
+    # Toplevel widget
+    newWindow.title("New Window")
+ 
+    # sets the geometry of toplevel
+    newWindow.geometry("450x640")
+ 
+    # A Label widget to show in toplevel
+    tk.Label(newWindow, 
+          text ="This is a new window").pack()
+ 
+ 
+label = tk.Label(master, 
+              text ="This is the main window")
+ 
+label.pack(pady = 10)
+ 
+# a button widget which will open a 
+# new window on button click
+btn = tk.Button(master, 
+             text ="Click to open a new window", 
+             command = openNewWindow)
+btn.pack(pady = 10)
+
+#vid = tk.Frame()
+ 
+# mainloop, runs infinitely
+master.mainloop()
+
+cv2.destroyAllWindows()
