@@ -13,7 +13,7 @@ master = tk.Tk()
 master.geometry("450x640")
  
 def showCamera():
-    video = cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV")
+    video = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
 
     if (video.isOpened() == False):
         print("Error opening the video file")
@@ -49,7 +49,7 @@ def photo_image(img):
     data = f'P6 {w} {h} 255 '.encode() + img[..., ::-1].tobytes()
     return PhotoImage(width=w, height=h, data=data, format='PPM')
 
-cap = cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV")
+cap = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
 def update():
     ret1, img1 = cap1.read()
     ret2, img2 = cap2.read()
@@ -61,8 +61,8 @@ def update():
 
 root = Tk()
 root.title("Video")
-cap1 = cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV")
-cap2 = cv2.VideoCapture(r"C:\Users\rosar\Downloads\IMG_7709.MOV")
+cap1 = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
+cap2 = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
 
 canvas = Canvas(root, width=1200, height=700)
 canvas.pack()
