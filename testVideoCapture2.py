@@ -200,6 +200,12 @@ while(video.isOpened()):
             myScreenshot = pg.screenshot()
             myScreenshot.save('screenshot.png')
             print("*******************x y w h ", x, y, w, h)
+            # if screenshot():
+            #     print("successful")
+            # else:
+            #     print("failed")
+
+        
 
         def hide_window():
             # hiding the tkinter window while taking the screenshot

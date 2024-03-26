@@ -1,18 +1,29 @@
 #libraries
 from PyQt5 import *
+from PyQt5 import QtWidgets
 import cv2
 import sys
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
+from tkinter import *
+import tkinter as tk
+import pyautogui as pg
+import time
+import pygetwindow
 
 #create main window object
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
+        title = "failure"
+        
+        #self.setGeometry(0, 0, 500, 300)
+
         #create layout for q widget
         self.VBL = QVBoxLayout()
+        self.setWindowTitle(title)
 
         self.FeedLabel = QLabel()
         self.VBL.addWidget(self.FeedLabel)
@@ -30,6 +41,11 @@ class MainWindow(QWidget):
         self.Worker1.ImageUpdate.connect(self.ImageUpdateSlot)
         self.setLayout(self.VBL)
 
+        self.ssBTN = QPushButton("Screenshot")
+        self.VBL.addWidget(self.ssBTN)
+        self.ssBTN.clicked.connect(self.screenshot)
+        self.VBL.addWidget(self.ssBTN)
+
     #change the pixmap displayed by feed label to value emmitted by worker1 (qthread) 
     def ImageUpdateSlot(self, Image):
         self.FeedLabel.setPixmap(QPixmap.fromImage(Image))
@@ -38,6 +54,40 @@ class MainWindow(QWidget):
         self.Worker1.stop()
         cv2.destroyAllWindows()
 
+    def screenshot(self):
+            # #user input for the window
+            # #this will be taken out when we make several buttons
+            # #print("\nenter camera name: ")
+            # #cameraname = str(input(''))
+
+            window = pygetwindow.getActiveWindow() #set to the tool1 camera now, but will be nav when we make the popup
+            left, top = window.topleft
+            right, bottom = window.bottomright
+            # random = int(time.time())
+            # # #filename = "C:/Users/kthog/guishots/" + str(random) + ".jpg"
+            # filename = "D:/screenshots/" + str(random) + ".png"
+
+            # # #find a way to get the camera window to the front
+            # # #move the frame to the other monitor and make sure its view is unobstructed
+            #pg.screenshot(filename, region=(left, top, right, bottom))
+            # # ss = Image.open(filename) #opens the image at the filename
+            # # ss = ss.crop((left, top, right, bottom)) #crops based on the coordinates acquired above
+            # # ss.save(filename) #saves the image to the path
+            # # ss.show(filename) #shows the image from the path
+            #pg.screenshot('screenshot.png', region=(left, top, right, bottom))
+            # MyScreenshot = pg.screenshot()
+            # MyScreenshot.save(filename)
+            pg.screenshot('screenshot.png', region=(left, top, right, bottom))
+            myScreenshot = pg.screenshot()
+            myScreenshot.save('screenshot.png')
+            # app = QtWidgets.QApplication(sys.argv)
+            # w = QtWidgets.QWidget()
+            # screen = app.primaryScreen()
+            #print('Screen: %s' % screen.name())
+            # screenshot = screen.grabWindow(w.winId())
+            # screenshot.save('screenshot.png')
+            
+
 #makes connection with camera and captures vid
 class Worker1(QThread):
     ImageUpdate = pyqtSignal(QImage)
@@ -45,35 +95,41 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(1)
+        video = cv2.VideoCapture(0)
         # Read logo and resize 
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
+        logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')
         size = 180
         logo = cv2.resize(logo, (size, size)) 
+        logo2 = cv2.resize(logo2, (size, size))
         # Create a mask of logo 
-        img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY) 
-        ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY) 
+        img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
+        img3gray = cv2.cvtColor(logo2, cv2.COLOR_BGR2GRAY) 
+        ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+        ret2, mask2 = cv2.threshold(img3gray, 1, 255, cv2.THRESH_BINARY) #probably dont need ret2
         while self.ThreadActive:
             if cv2.waitKey(1) == ord('q'):
                     break
             ret, frame = video.read()
+            if video.isOpened() == False:
+                 print("Failed to open video")
             # Region of Image (ROI), where we want to insert logo 
-            roi = ((frame[-size-150:-150, -size-10:-10]), (frame[-size-150:-150, -size-100:-100]))
+            roi = ((frame[-size-150:-150, -size-10:-10]))
+            roi2 = ((frame[-size-150:-150, -size-450:-450]))
             #roi1 = roi + (frame[-size-150:-150, -size-100:-100])
             # Set an index of where the mask is 
             roi[np.where(mask)] = 0
-            roi += logo 
+            roi2[np.where(mask2)] = 0
+            roi += logo
+            roi2 += logo2 
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 FlippedImage = cv2.flip(Image, 1)
                 ConvertToQtFormat = QImage(FlippedImage.data, FlippedImage.shape[1], FlippedImage.shape[0], QImage.Format_RGB888)
                 Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-
                 #emit thread
                 self.ImageUpdate.emit(Pic)
-            
                 
-
     def stop(self):
         self.ThreadActive = False
         self.quit()
