@@ -58,7 +58,8 @@ class MainWindow(QWidget):
 
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
-            file = 'screenshot.png'
+            random = int(time.time())
+            file = "screenshot" + str(random) + ".png"
             window = pygetwindow.getWindowsWithTitle('hellooo')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
@@ -75,7 +76,7 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(0)
+        video = cv2.VideoCapture(1)
         # Read logo and resize 
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
         logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')

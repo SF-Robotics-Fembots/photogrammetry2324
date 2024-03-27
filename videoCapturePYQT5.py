@@ -18,7 +18,7 @@ from PIL import Image
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
-        title = "hellooo"
+        title = "photogrammetry"
         
         #self.setGeometry(0, 0, 500, 300)
 
@@ -58,8 +58,9 @@ class MainWindow(QWidget):
 
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
+            #random = int(time.time())
             file = 'screenshot.png'
-            window = pygetwindow.getWindowsWithTitle('hellooo')[0]
+            window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
             pg.screenshot(file)
@@ -75,7 +76,7 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(0)
+        video = cv2.VideoCapture(1)
         # Read logo and resize 
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
         logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')
