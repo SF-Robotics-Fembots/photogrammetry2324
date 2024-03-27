@@ -12,12 +12,13 @@ import tkinter as tk
 import pyautogui as pg
 import time
 import pygetwindow
+from PIL import Image
 
 #create main window object
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
-        title = "failure"
+        title = "hellooo"
         
         #self.setGeometry(0, 0, 500, 300)
 
@@ -52,41 +53,20 @@ class MainWindow(QWidget):
 
     def CancelFeed(self):
         self.Worker1.stop()
+        time.sleep(0)
         cv2.destroyAllWindows()
 
     def screenshot(self):
-            # #user input for the window
-            # #this will be taken out when we make several buttons
-            # #print("\nenter camera name: ")
-            # #cameraname = str(input(''))
-
-            window = pygetwindow.getActiveWindow() #set to the tool1 camera now, but will be nav when we make the popup
+            #titles = pygetwindow.getAllTitles() #prob dont need this
+            file = 'screenshot.png'
+            window = pygetwindow.getWindowsWithTitle('hellooo')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
-            # random = int(time.time())
-            # # #filename = "C:/Users/kthog/guishots/" + str(random) + ".jpg"
-            # filename = "D:/screenshots/" + str(random) + ".png"
-
-            # # #find a way to get the camera window to the front
-            # # #move the frame to the other monitor and make sure its view is unobstructed
-            #pg.screenshot(filename, region=(left, top, right, bottom))
-            # # ss = Image.open(filename) #opens the image at the filename
-            # # ss = ss.crop((left, top, right, bottom)) #crops based on the coordinates acquired above
-            # # ss.save(filename) #saves the image to the path
-            # # ss.show(filename) #shows the image from the path
-            #pg.screenshot('screenshot.png', region=(left, top, right, bottom))
-            # MyScreenshot = pg.screenshot()
-            # MyScreenshot.save(filename)
-            pg.screenshot('screenshot.png', region=(left, top, right, bottom))
-            myScreenshot = pg.screenshot()
-            myScreenshot.save('screenshot.png')
-            # app = QtWidgets.QApplication(sys.argv)
-            # w = QtWidgets.QWidget()
-            # screen = app.primaryScreen()
-            #print('Screen: %s' % screen.name())
-            # screenshot = screen.grabWindow(w.winId())
-            # screenshot.save('screenshot.png')
-            
+            pg.screenshot(file)
+            im = Image.open(file)
+            im = im.crop((left+19, top+42, right-19, bottom-106))
+            #im.save(file)
+            im.show(file)
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
