@@ -76,7 +76,7 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(1)
+        video = cv2.VideoCapture(0)
         # Read logo and resize 
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
         logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')

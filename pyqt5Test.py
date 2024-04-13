@@ -59,14 +59,15 @@ class MainWindow(QWidget):
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time())
-            file = "screenshot" + str(random) + ".png"
+            video = cv2.VideoCapture(0)
+            file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
             window = pygetwindow.getWindowsWithTitle('hellooo')[0]
-            left, top = window.topleft
-            right, bottom = window.bottomright
+            left, top = video.topleft
+            right, bottom = video.bottomright
             pg.screenshot(file)
             im = Image.open(file)
-            im = im.crop((left+19, top+42, right-19, bottom-106))
-            #im.save(file)
+            im = im.crop((left, top, right, bottom)) #make more adaptable
+            im.save(file)
             im.show(file)
 
 #makes connection with camera and captures vid
@@ -76,7 +77,7 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(1)
+        video = cv2.VideoCapture(0)
         # Read logo and resize 
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
         logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')
