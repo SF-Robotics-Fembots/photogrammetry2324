@@ -37,23 +37,26 @@ import matplotlib.pyplot as plt
 # cv2.destroyAllWindows()
 
 
-#variables
-ppmm = 5.855555 #make ppmm as input
+#enter the number of pixels for the 32 cm area
+pixelsthirtytwo = float(input("pixels 32 cm area: "))
 
-#ppmm means pixels per mm
-pixels = 0
-mm = 0.00
+#get the px per cm
+ppcm = float(pixelsthirtytwo/32)
 
-pixels = int(input("num of pix: "))
+#pixels for the different sides
+ppx = float(input("pixels left side (x): "))
+ppy = float(input("pixels right side (y): "))
+ppz = ppx + ppy + pixelsthirtytwo
 
 #calculations
-mm = pixels/ppmm
-print(str(mm) + " mm")
+cmz = ppz/ppcm
+print("The width is: " + str(cmz) + "cm")
 
-#finding total width 
-#zpixels = 0
+#get the pixels for the height
+pph = float(input("pixels height (top of coral to bottom): "))
 
-#ask for input on zpixels
-#zpixels = int(input("num of zpixels: "))
+#calculations pt. 2
+cmh = pph/(ppz*ppcm)
 
-#calculations on total width
+print("The height is: " + str(cmh) + "cm")
+
