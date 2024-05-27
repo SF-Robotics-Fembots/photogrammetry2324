@@ -102,7 +102,7 @@ class Worker1(QThread):
             roi[np.where(mask)] = 0
             roi2[np.where(mask2)] = 0
             roi += logo
-            roi2 += logo2 
+            roi2 += logo2
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 FlippedImage = cv2.flip(Image, 1)

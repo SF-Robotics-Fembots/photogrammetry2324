@@ -81,7 +81,7 @@ class Worker1(QThread):
         logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
         logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')
         size = 180
-        logo = cv2.resize(logo, (size, size)) 
+        logo = cv2.resize(logo, (180, 180)) 
         logo2 = cv2.resize(logo2, (size, size))
         # Create a mask of logo 
         img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
