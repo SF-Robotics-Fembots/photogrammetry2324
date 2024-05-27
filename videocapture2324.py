@@ -13,13 +13,22 @@ import pyautogui as pg
 import time
 import pygetwindow
 from PIL import Image
+import numpy as np
 
 #create main window object
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         title = "photogrammetry"
-        
+        video = cv2.VideoCapture(0)
+
+        # start_point = (0, 0)
+        # end_point = (250, 250)
+        # color = (0, 255, 0)
+        # thickness = 9
+        # image = cv2.line(video, start_point, end_point, color, thickness)
+        # cv2.imshow(title, image)
+
         #self.setGeometry(0, 0, 500, 300)
 
         #create layout for q widget
@@ -47,7 +56,9 @@ class MainWindow(QWidget):
         self.ssBTN.clicked.connect(self.screenshot)
         self.VBL.addWidget(self.ssBTN)
 
-    #change the pixmap displayed by feed label to value emmitted by worker1 (qthread) 
+
+
+    #change the pixmap displayed by feed label to value emmitted by worker1 (qthread)
     def ImageUpdateSlot(self, Image):
         self.FeedLabel.setPixmap(QPixmap.fromImage(Image))
 
@@ -77,32 +88,51 @@ class Worker1(QThread):
         self.ThreadActive = True
         #capture video
         video = cv2.VideoCapture(0)
-        # Read logo and resize 
-        logo = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png') 
-        logo2 = cv2.imread(r'C:/Users/rosar/Downloads/red.png.png')
-        size = 180
-        logo = cv2.resize(logo, (180, 180)) 
-        logo2 = cv2.resize(logo2, (size, size))
-        # Create a mask of logo 
-        img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
-        img3gray = cv2.cvtColor(logo2, cv2.COLOR_BGR2GRAY) 
-        ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
-        ret2, mask2 = cv2.threshold(img3gray, 1, 255, cv2.THRESH_BINARY) #probably dont need ret2
+        # Read logo and resize
+        # logo = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
+        # logo2 = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
+        # size = 150
+        # logo = cv2.resize(logo, (size, 10), (600,600))
+        # logo2 = cv2.resize(logo2, (size, 10), (500,500))
+        # # Create a mask of logo
+        # img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
+        # img3gray = cv2.cvtColor(logo2, cv2.COLOR_BGR2GRAY)
+        # ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+        # ret2, mask2 = cv2.threshold(img3gray, 1, 255, cv2.THRESH_BINARY) #probably dont need ret2
+        
         while self.ThreadActive:
             if cv2.waitKey(1) == ord('q'):
                     break
             ret, frame = video.read()
             if video.isOpened() == False:
                  print("Failed to open video")
-            # Region of Image (ROI), where we want to insert logo 
-            roi = ((frame[-size-150:-150, -size-10:-10]))
-            roi2 = ((frame[-size-150:-150, -size-450:-450]))
-            #roi1 = roi + (frame[-size-150:-150, -size-100:-100])
-            # Set an index of where the mask is 
-            roi[np.where(mask)] = 0
-            roi2[np.where(mask2)] = 0
-            roi += logo
-            roi2 += logo2 
+            # Region of Image (ROI), where we want to insert logo
+            # roi = ((frame[200:150, 200:150]))
+            # roi2 = ((frame[200:150, 200:150]))
+            # roi = ((frame[-size-175:-175, -size-40:-40]))
+            # roi2 = ((frame[-size-175:-175, -size-450:-450]))
+            # # Set an index of where the mask is
+            # roi[np.where(mask)] = 0
+            # roi2[np.where(mask2)] = 0
+            # roi += logo
+            # roi2 += logo2
+            # print(mask)
+            # title = 'photogrammetry'
+            # start_point = (0,0)
+            # end_point = (250,250)
+            # color = (0, 255, 0)
+            # thickness = 9
+            # bar = cv2.line(video, start_point, end_point, color, thickness)
+            # cv2.imshow(title, bar)
+            # cv2.line()
+            ret, frame = video.read()
+            # width = int(video.get(1))
+            # height = int(video.get(2))
+            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5)
+            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)
+            cv2.imshow('photogrammetry', bar)
+            cv2.imshow('photogrammetry', bar2)
+
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 FlippedImage = cv2.flip(Image, 1)
@@ -110,7 +140,7 @@ class Worker1(QThread):
                 Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 #emit thread
                 self.ImageUpdate.emit(Pic)
-                
+
     def stop(self):
         self.ThreadActive = False
         self.quit()
