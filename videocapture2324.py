@@ -89,8 +89,8 @@ class MainWindow(QWidget):
         ret, frame = video.read()
         bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
         bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(window, bar)#***************
-        cv2.imshow(window, bar2)#***************
+        cv2.imshow(frame, bar)#***************
+        cv2.imshow(frame, bar2)#***************
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
