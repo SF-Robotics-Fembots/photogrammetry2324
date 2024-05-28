@@ -20,7 +20,6 @@ class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         title = "photogrammetry"
-        video = cv2.VideoCapture(0)
 
         # start_point = (0, 0)
         # end_point = (250, 250)
@@ -56,6 +55,10 @@ class MainWindow(QWidget):
         self.ssBTN.clicked.connect(self.screenshot)
         self.VBL.addWidget(self.ssBTN)
 
+        self.hideBtn = QPushButton("Show bar")
+        self.VBL.addWidget(self.hideBtn)
+        self.hideBtn.clicked.connect(self.showBars)
+        
 
 
     #change the pixmap displayed by feed label to value emmitted by worker1 (qthread)
@@ -80,6 +83,15 @@ class MainWindow(QWidget):
             im.save(file)
             im.show(file)
 
+    def showBars(self):
+        video = cv2.VideoCapture(0)
+        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+        ret, frame = video.read()
+        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+        cv2.imshow(window, bar)#***************
+        cv2.imshow(window, bar2)#***************
+
 #makes connection with camera and captures vid
 class Worker1(QThread):
     ImageUpdate = pyqtSignal(QImage)
@@ -88,17 +100,6 @@ class Worker1(QThread):
         self.ThreadActive = True
         #capture video
         video = cv2.VideoCapture(0)
-        # Read logo and resize
-        # logo = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
-        # logo2 = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
-        # size = 150
-        # logo = cv2.resize(logo, (size, 10), (600,600))
-        # logo2 = cv2.resize(logo2, (size, 10), (500,500))
-        # # Create a mask of logo
-        # img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
-        # img3gray = cv2.cvtColor(logo2, cv2.COLOR_BGR2GRAY)
-        # ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
-        # ret2, mask2 = cv2.threshold(img3gray, 1, 255, cv2.THRESH_BINARY) #probably dont need ret2
         
         while self.ThreadActive:
             if cv2.waitKey(1) == ord('q'):
@@ -106,32 +107,13 @@ class Worker1(QThread):
             ret, frame = video.read()
             if video.isOpened() == False:
                  print("Failed to open video")
-            # Region of Image (ROI), where we want to insert logo
-            # roi = ((frame[200:150, 200:150]))
-            # roi2 = ((frame[200:150, 200:150]))
-            # roi = ((frame[-size-175:-175, -size-40:-40]))
-            # roi2 = ((frame[-size-175:-175, -size-450:-450]))
-            # # Set an index of where the mask is
-            # roi[np.where(mask)] = 0
-            # roi2[np.where(mask2)] = 0
-            # roi += logo
-            # roi2 += logo2
-            # print(mask)
-            # title = 'photogrammetry'
-            # start_point = (0,0)
-            # end_point = (250,250)
-            # color = (0, 255, 0)
-            # thickness = 9
-            # bar = cv2.line(video, start_point, end_point, color, thickness)
-            # cv2.imshow(title, bar)
-            # cv2.line()
-            ret, frame = video.read()
+            # ret, frame = video.read() #***********
             # width = int(video.get(1))
             # height = int(video.get(2))
-            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5)
-            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)
-            cv2.imshow('photogrammetry', bar)
-            cv2.imshow('photogrammetry', bar2)
+            # bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+            # bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+            # cv2.imshow('photogrammetry', bar)#***************
+            # cv2.imshow('photogrammetry', bar2)#***************
 
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
