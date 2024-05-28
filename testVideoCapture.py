@@ -1,126 +1,171 @@
-# # from tkinter import *
-# # import time
-# # from PIL import ImageTk, Image
-import pyautogui as pg
-# # import cv2
-# import tkinter as tk
-# from PIL import Image, ImageTk
+#libraries
+from PyQt5 import *
+from PyQt5 import QtWidgets
 import cv2
+import sys
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+import numpy as np
+from tkinter import *
 import tkinter as tk
+import pyautogui as pg
+import time
+import pygetwindow
+from PIL import Image
+import numpy as np
 
+#create main window object
+class MainWindow(QWidget):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        title = "photogrammetry"
+        video = cv2.VideoCapture(0)
+        # start_point = (0, 0)
+        # end_point = (250, 250)
+        # color = (0, 255, 0)
+        # thickness = 9
+        # image = cv2.line(video, start_point, end_point, color, thickness)
+        # cv2.imshow(title, image)
 
-root = tk.Tk() # create a Tk root window
-master = tk.Tk()
+        #self.setGeometry(0, 0, 500, 300)
 
-w = 400 # width for the Tk root
-h = 500 # height for the Tk root
+        #create layout for q widget
+        self.VBL = QVBoxLayout()
+        self.setWindowTitle(title)
 
-# get screen width and height
-ws = root.winfo_screenwidth() # width of the screen
-hs = root.winfo_screenheight() # height of the screen
+        self.FeedLabel = QLabel()
+        self.VBL.addWidget(self.FeedLabel)
 
-# calculate x and y coordinates for the Tk root window
-x = (ws/2) - (w/2)
-y = (hs/2) - (h/2)
+        self.CancelBTN = QPushButton("Cancel")
 
-# set the dimensions of the screen 
-# and where it is placed
-root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.VBL.addWidget(self.CancelBTN)
+        self.CancelBTN.clicked.connect(self.CancelFeed)
+        self.VBL.addWidget(self.CancelBTN)
 
-#name video variable
-video = cv2.VideoCapture(r"C:/Users/rosar\Downloads/IMG_7709.MOV")
+        #define worker1 thread in main program
+        self.Worker1 = Worker1()
 
-if (video.isOpened() == False):
-    print("Error opening the video file")
+        self.Worker1.start()
+        self.Worker1.ImageUpdate.connect(self.ImageUpdateSlot)
+        self.setLayout(self.VBL)
 
-while(video.isOpened()):
-    ret, frame = video.read()
-    if ret == True:
-        # Using waitKey to display each frame of the video for 1 ms
-        key = cv2.waitKey(1)
-        if key == ord('q'):
-             break
-        # Get the current frame size
-        height, width, _ = frame.shape
-        # Resize the frame
-        scale_percent = 50
-        new_width = int(width * scale_percent / 120)
-        new_height = int(height * scale_percent / 150)
-        dim = (new_width, new_height)
-        resized = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
-        print("new wdith, new hgiht", new_width, new_height)
+        self.ssBTN = QPushButton("Screenshot")
+        self.VBL.addWidget(self.ssBTN)
+        self.ssBTN.clicked.connect(self.screenshot)
+       #self.VBL.addWidget(self.ssBTN)
 
-        video_bars = cv2.line(resized, (80, 310), (162, 310), (0, 0, 255), 10) 
-
-        video_two_bars = cv2.line(video_bars, (295, 310), (377, 310), (0, 0, 255), 10)
-        cv2.imshow('with 2 bars', video_two_bars)
-
-        #canvas1 is the window that has the ss button
-        canvas1 = tk.Canvas(width = 300, height = 300)
-        canvas1.pack()
-
-        #if q is pressed, stop program
-        if key == ord('q'):
-             break
+        self.srBTN = QPushButton("Screenrecord")
+        self.VBL.addWidget(self.srBTN)
+        self.srBTN.clicked.connect(self.screenrecord)
         
-        #ss function
-        def screenshot():
-            #trying to get region of video window
-            x, y = root.winfo_x(), root.winfo_y()
-            w, h = root.winfo_width(), root.winfo_height()
-            #geometry_string = root.geometry()
-            #print("geometry_string", geometry_string)
-            pg.screenshot('screenshot.png', region=(x, y, w, h))
-            myScreenshot = pg.screenshot()
-            myScreenshot.save('screenshot.png')
-            print("*******************x y w h ", x, y, w, h)
-
-        def hide_window():
-            # hiding the tkinter window while taking the screenshot
-            root.withdraw()
-            root.after(1000, screenshot)
-
-        # # Add a Label widget
-            tk.Label(tk, text="Click the Button to Take the Screenshot", font=('Times New Roman', 18, 'bold')).pack(pady=10)
 
 
-        # # # Create a Button to take the screenshots 
-        myButton = tk.Button(text='Take Screenshot', command=screenshot, bg='green',fg='white',font= 10)
-        canvas1.create_window(150, 150, window=myButton)
+    #change the pixmap displayed by feed label to value emmitted by worker1 (qthread)
+    def ImageUpdateSlot(self, Image):
+        self.FeedLabel.setPixmap(QPixmap.fromImage(Image))
 
-def openNewWindow():
-     
-    # Toplevel object which will 
-    # be treated as a new window
-    newWindow = tk.Toplevel(master)
- 
-    # sets the title of the
-    # Toplevel widget
-    newWindow.title("New Window")
- 
-    # sets the geometry of toplevel
-    newWindow.geometry("450x640")
- 
-    # A Label widget to show in toplevel
-    tk.Label(newWindow, 
-          text ="This is a new window").pack()
- 
- 
-label = tk.Label(master, 
-              text ="This is the main window")
- 
-label.pack(pady = 10)
- 
-# a button widget which will open a 
-# new window on button click
-btn = tk.Button(master, 
-             text ="Click to open a new window", 
-             command = openNewWindow)
-btn.pack(pady = 10)
+    def CancelFeed(self):
+        self.Worker1.stop()
+        time.sleep(0)
+        cv2.destroyAllWindows()
 
-#vid = tk.Frame()
- 
-# mainloop, runs infinitely
-master.mainloop()
+    def screenshot(self):
+            #titles = pygetwindow.getAllTitles() #prob dont need this
+            random = int(time.time())
+            file = "C:/Users/alyss/Downloads/" + str(random) + ".png"
+            window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+            left, top = window.topleft
+            right, bottom = window.bottomright
+            pg.screenshot(file)
+            im = Image.open(file)
+            im = im.crop((left+19, top+42, right-19, bottom-106))
+            im.save(file)
+            im.show(file)
 
-cv2.destroyAllWindows()
+    def screenrecord(self):
+         rand = int(time.time())
+         file = "C:/Users/alyss/Downloads/" + str(rand)
+         timer = QTimer()
+         timer.setInterval(100)
+         timer.start()
+         window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+         screen = pg.screenshot()
+         #screen = App.screens()[0]
+        # screenImage = QPixmap(screen)
+        # screen.grabWindow(window)
+         screen.save(file + ".ScreenImage.bmp")
+          
+         
+
+#makes connection with camera and captures vid
+class Worker1(QThread):
+    ImageUpdate = pyqtSignal(QImage)
+    #define run function
+    def run(self):
+        self.ThreadActive = True
+        #capture video
+        video = cv2.VideoCapture(0)
+        # Read logo and resize
+        # logo = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
+        # logo2 = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
+        # size = 150
+        # logo = cv2.resize(logo, (size, 10), (600,600))
+        # logo2 = cv2.resize(logo2, (size, 10), (500,500))
+        # # Create a mask of logo
+        # img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
+        # img3gray = cv2.cvtColor(logo2, cv2.COLOR_BGR2GRAY)
+        # ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+        # ret2, mask2 = cv2.threshold(img3gray, 1, 255, cv2.THRESH_BINARY) #probably dont need ret2
+        
+        while self.ThreadActive:
+            if cv2.waitKey(1) == ord('q'):
+                    break
+            ret, frame = video.read()
+            if video.isOpened() == False:
+                 print("Failed to open video")
+            # Region of Image (ROI), where we want to insert logo
+            # roi = ((frame[200:150, 200:150]))
+            # roi2 = ((frame[200:150, 200:150]))
+            # roi = ((frame[-size-175:-175, -size-40:-40]))
+            # roi2 = ((frame[-size-175:-175, -size-450:-450]))
+            # # Set an index of where the mask is
+            # roi[np.where(mask)] = 0
+            # roi2[np.where(mask2)] = 0
+            # roi += logo
+            # roi2 += logo2
+            # print(mask)
+            # title = 'photogrammetry'
+            # start_point = (0,0)
+            # end_point = (250,250)
+            # color = (0, 255, 0)
+            # thickness = 9
+            # bar = cv2.line(video, start_point, end_point, color, thickness)
+            # cv2.imshow(title, bar)
+            # cv2.line()
+            ret, frame = video.read()
+            # width = int(video.get(1))
+            # height = int(video.get(2))
+            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5)
+            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)
+            cv2.imshow('photogrammetry', bar)
+            cv2.imshow('photogrammetry', bar2)
+
+            if ret:
+                Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                FlippedImage = cv2.flip(Image, 1)
+                ConvertToQtFormat = QImage(FlippedImage.data, FlippedImage.shape[1], FlippedImage.shape[0], QImage.Format_RGB888)
+                Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                #emit thread
+                self.ImageUpdate.emit(Pic)
+
+    def stop(self):
+        self.ThreadActive = False
+        self.quit()
+
+#initialize q main window
+if __name__ == "__main__":
+    App = QApplication(sys.argv)
+    Root = MainWindow()
+    Root.show()
+    sys.exit(App.exec())

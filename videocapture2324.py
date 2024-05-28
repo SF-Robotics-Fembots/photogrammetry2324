@@ -15,13 +15,12 @@ import pygetwindow
 from PIL import Image
 import numpy as np
 
+video = cv2.VideoCapture(0)
 #create main window object
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         title = "photogrammetry"
-        video = cv2.VideoCapture(0)
-
         # start_point = (0, 0)
         # end_point = (250, 250)
         # color = (0, 255, 0)
@@ -54,8 +53,12 @@ class MainWindow(QWidget):
         self.ssBTN = QPushButton("Screenshot")
         self.VBL.addWidget(self.ssBTN)
         self.ssBTN.clicked.connect(self.screenshot)
-        self.VBL.addWidget(self.ssBTN)
+       #self.VBL.addWidget(self.ssBTN)
 
+        self.srBTN = QPushButton("Screenrecord")
+        self.VBL.addWidget(self.srBTN)
+        self.srBTN.clicked.connect(self.screenrecord)
+        
 
 
     #change the pixmap displayed by feed label to value emmitted by worker1 (qthread)
@@ -70,8 +73,8 @@ class MainWindow(QWidget):
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time())
-            file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
-            window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+            file = "C:/Users/alyss/Downloads/" + str(random) + ".png"
+            window = pygetwindow.getWindowsWithTitle('screenshot')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
             pg.screenshot(file)
@@ -80,6 +83,28 @@ class MainWindow(QWidget):
             im.save(file)
             im.show(file)
 
+    def screenrecord(self):
+            #cam = cv2.VideoCapture(0)
+            width = int(video.get(3))
+            height = int(video.get(4))
+            fps = 20
+            out = cv2.VideoWriter("C:/Users/alyss/Downloads/vid.avi", cv2.VideoWriter_fourcc('M','J', 'P', 'G'), fps, (width, height))
+
+            while video.isOpened():
+                ret, frame = video.read()
+                if ret == True:
+                    out.write(frame)
+                    cv2.imshow('frame', frame)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+                else:
+                    break
+            
+            #video.release()
+            out.release()
+
+            cv2.destroyWindow('frame')
+
 #makes connection with camera and captures vid
 class Worker1(QThread):
     ImageUpdate = pyqtSignal(QImage)
@@ -87,7 +112,7 @@ class Worker1(QThread):
     def run(self):
         self.ThreadActive = True
         #capture video
-        video = cv2.VideoCapture(0)
+        #video = cv2.VideoCapture(0)
         # Read logo and resize
         # logo = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
         # logo2 = cv2.imread(r'C:/Users/rosar/Downloads/redBar.png')
@@ -103,7 +128,6 @@ class Worker1(QThread):
         while self.ThreadActive:
             if cv2.waitKey(1) == ord('q'):
                     break
-            ret, frame = video.read()
             if video.isOpened() == False:
                  print("Failed to open video")
             # Region of Image (ROI), where we want to insert logo
@@ -130,8 +154,8 @@ class Worker1(QThread):
             # height = int(video.get(2))
             bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5)
             bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)
-            cv2.imshow('photogrammetry', bar)
-            cv2.imshow('photogrammetry', bar2)
+            cv2.imshow('screenshot', bar)
+            cv2.imshow('screenshot', bar2)
 
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
