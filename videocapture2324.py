@@ -15,7 +15,7 @@ import pygetwindow
 from PIL import Image
 import numpy as np
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
 bars = False
 #ret, frame = video.read()
 #create main window object
@@ -82,7 +82,7 @@ class MainWindow(QWidget):
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time())
-            file = "C:/Users/alyss/Downloads/" + str(random) + ".png"
+            file = "D:/screenshots" + str(random) + ".png"
             window = pygetwindow.getWindowsWithTitle('bars')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
@@ -93,17 +93,6 @@ class MainWindow(QWidget):
             im.show(file)
 
     def showBars(self):
-        #video = cv2.VideoCapture(0)
-        #window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-        #bars = True
-        
-        #bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
-        #bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
-       #bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-        #bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        # cv2.imshow('screenshot', bar)#***************
-        # cv2.imshow('screenshot', bar2)#***************
-
         while video.isOpened():
             ret, frame = video.read()
             if ret == True:
@@ -122,21 +111,13 @@ class MainWindow(QWidget):
         #out.release() #what is this
 
         cv2.destroyWindow('bars')
-    # def hideBars(self):
-    #         #bars = False
-    #         ret, frame = video.read()
-    #        # while bars == True:
-    #         bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
-    #         bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
-    #         cv2.imshow('screenshot', bar)#***************
-    #         cv2.imshow('screenshot', bar2)#***************
 
     def screenrecord(self):
             #cam = cv2.VideoCapture(0)
             width = int(video.get(3))
             height = int(video.get(4))
             fps = 20
-            out = cv2.VideoWriter("C:/Users/alyss/Downloads/vid.avi", cv2.VideoWriter_fourcc('M','J', 'P', 'G'), fps, (width, height))
+            out = cv2.VideoWriter("D:/screenshots/vid.avi", cv2.VideoWriter_fourcc('M','J', 'P', 'G'), fps, (width, height))
 
             while video.isOpened():
                 ret, frame = video.read()
