@@ -83,12 +83,12 @@ class MainWindow(QWidget):
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time())
             file = "C:/Users/alyss/Downloads/" + str(random) + ".png"
-            window = pygetwindow.getWindowsWithTitle('screenshot')[0]
+            window = pygetwindow.getWindowsWithTitle('bars')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
             pg.screenshot(file)
             im = Image.open(file)
-            im = im.crop((left+19, top+42, right-19, bottom-106))
+            im = im.crop((left, top, right, bottom))
             im.save(file)
             im.show(file)
 
@@ -96,13 +96,9 @@ class MainWindow(QWidget):
         #video = cv2.VideoCapture(0)
         #window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
         #bars = True
-        ret, frame = video.read()
-        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(frame, bar)#***************
-        cv2.imshow(frame, bar2)#***************
-        bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
-        bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
+        
+        #bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
+        #bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
        #bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
         #bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
         # cv2.imshow('screenshot', bar)#***************
@@ -112,24 +108,28 @@ class MainWindow(QWidget):
             ret, frame = video.read()
             if ret == True:
                 #out.write(frame)
-                cv2.imshow('frame', frame)
+                # cv2.imshow('frame', frame)
+                bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+                bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+                cv2.imshow('bars', bar)#***************
+                cv2.imshow('bars', bar2)#***************
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
                 break
         
         #video.release()
-        out.release() #what is this
+        #out.release() #what is this
 
-        cv2.destroyWindow('frame')
-    def hideBars(self):
-            #bars = False
-            ret, frame = video.read()
-           # while bars == True:
-            bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
-            bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
-            cv2.imshow('screenshot', bar)#***************
-            cv2.imshow('screenshot', bar2)#***************
+        cv2.destroyWindow('bars')
+    # def hideBars(self):
+    #         #bars = False
+    #         ret, frame = video.read()
+    #        # while bars == True:
+    #         bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
+    #         bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
+    #         cv2.imshow('screenshot', bar)#***************
+    #         cv2.imshow('screenshot', bar2)#***************
 
     def screenrecord(self):
             #cam = cv2.VideoCapture(0)
@@ -142,20 +142,20 @@ class MainWindow(QWidget):
                 ret, frame = video.read()
                 if ret == True:
                     out.write(frame)
-                    cv2.imshow('frame', frame)
+                    cv2.imshow('screenrecord', frame)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
                 else:
                     break
-            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-            cv2.imshow('screenshot', bar)#***************
-            cv2.imshow('screenshot', bar2)#***************
+            # bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+            # bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+            # cv2.imshow('screenshot', bar)#***************
+            # cv2.imshow('screenshot', bar2)#***************
             
             #video.release()
             out.release()
 
-            cv2.destroyWindow('frame')
+            cv2.destroyWindow('screenrecord')
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
