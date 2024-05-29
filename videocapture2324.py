@@ -97,6 +97,10 @@ class MainWindow(QWidget):
         #window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
         #bars = True
         ret, frame = video.read()
+        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+        cv2.imshow(frame, bar)#***************
+        cv2.imshow(frame, bar2)#***************
         bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
         bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
        #bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
