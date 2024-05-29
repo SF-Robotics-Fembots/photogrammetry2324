@@ -88,7 +88,7 @@ class MainWindow(QWidget):
             right, bottom = window.bottomright
             pg.screenshot(file)
             im = Image.open(file)
-            im = im.crop((left, top, right, bottom))
+            im = im.crop((left+10, top+70, right-10, bottom-10))
             im.save(file)
             im.show(file)
 
