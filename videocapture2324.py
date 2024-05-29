@@ -16,6 +16,8 @@ from PIL import Image
 import numpy as np
 
 video = cv2.VideoCapture(0)
+bars = False
+#ret, frame = video.read()
 #create main window object
 class MainWindow(QWidget):
     def __init__(self):
@@ -29,7 +31,7 @@ class MainWindow(QWidget):
         # image = cv2.line(video, start_point, end_point, color, thickness)
         # cv2.imshow(title, image)
 
-        #self.setGeometry(0, 0, 500, 300)
+        #self.setGeometry(0, 0, 500, 300)#
 
         #create layout for q widget
         self.VBL = QVBoxLayout()
@@ -47,7 +49,7 @@ class MainWindow(QWidget):
         #define worker1 thread in main program
         self.Worker1 = Worker1()
 
-        self.Worker1.start()
+        #self.Worker1.start()
         self.Worker1.ImageUpdate.connect(self.ImageUpdateSlot)
         self.setLayout(self.VBL)
 
@@ -91,13 +93,39 @@ class MainWindow(QWidget):
             im.show(file)
 
     def showBars(self):
-        video = cv2.VideoCapture(0)
-        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+        #video = cv2.VideoCapture(0)
+        #window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+        #bars = True
         ret, frame = video.read()
-        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(window, bar)#***************
-        cv2.imshow(window, bar2)#***************
+        bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
+        bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
+       #bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+        #bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+        # cv2.imshow('screenshot', bar)#***************
+        # cv2.imshow('screenshot', bar2)#***************
+
+        while video.isOpened():
+            ret, frame = video.read()
+            if ret == True:
+                #out.write(frame)
+                cv2.imshow('frame', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            else:
+                break
+        
+        #video.release()
+        out.release() #what is this
+
+        cv2.destroyWindow('frame')
+    def hideBars(self):
+            #bars = False
+            ret, frame = video.read()
+           # while bars == True:
+            bar = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5) #***************
+            bar2 = cv2.line(frame, (0, 0), (0, 0), (0, 0, 0,), 5)#***************
+            cv2.imshow('screenshot', bar)#***************
+            cv2.imshow('screenshot', bar2)#***************
 
     def screenrecord(self):
             #cam = cv2.VideoCapture(0)
@@ -115,6 +143,10 @@ class MainWindow(QWidget):
                         break
                 else:
                     break
+            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+            cv2.imshow('screenshot', bar)#***************
+            cv2.imshow('screenshot', bar2)#***************
             
             #video.release()
             out.release()
@@ -146,13 +178,12 @@ class Worker1(QThread):
                     break
             if video.isOpened() == False:
                  print("Failed to open video")
-            # ret, frame = video.read() #***********
+            ret, frame = video.read()
             # width = int(video.get(1))
             # height = int(video.get(2))
-            # bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-            # bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-            # cv2.imshow('photogrammetry', bar)#***************
-            # cv2.imshow('photogrammetry', bar2)#***************
+
+            #video automatically has bars
+
 
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -161,6 +192,10 @@ class Worker1(QThread):
                 Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 #emit thread
                 self.ImageUpdate.emit(Pic)
+                bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+                bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+                cv2.imshow('screenshot', bar)#***************
+                cv2.imshow('screenshot', bar2)#***************
 
     def stop(self):
         self.ThreadActive = False
