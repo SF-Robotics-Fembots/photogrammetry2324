@@ -21,6 +21,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         title = "photogrammetry"
+
         # start_point = (0, 0)
         # end_point = (250, 250)
         # color = (0, 255, 0)
@@ -53,6 +54,12 @@ class MainWindow(QWidget):
         self.ssBTN = QPushButton("Screenshot")
         self.VBL.addWidget(self.ssBTN)
         self.ssBTN.clicked.connect(self.screenshot)
+        self.VBL.addWidget(self.ssBTN)
+
+        self.hideBtn = QPushButton("Show bar")
+        self.VBL.addWidget(self.hideBtn)
+        self.hideBtn.clicked.connect(self.showBars)
+        
        #self.VBL.addWidget(self.ssBTN)
 
         self.srBTN = QPushButton("Screenrecord")
@@ -82,6 +89,15 @@ class MainWindow(QWidget):
             im = im.crop((left+19, top+42, right-19, bottom-106))
             im.save(file)
             im.show(file)
+
+    def showBars(self):
+        video = cv2.VideoCapture(0)
+        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+        ret, frame = video.read()
+        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+        cv2.imshow(window, bar)#***************
+        cv2.imshow(window, bar2)#***************
 
     def screenrecord(self):
             #cam = cv2.VideoCapture(0)
@@ -130,32 +146,13 @@ class Worker1(QThread):
                     break
             if video.isOpened() == False:
                  print("Failed to open video")
-            # Region of Image (ROI), where we want to insert logo
-            # roi = ((frame[200:150, 200:150]))
-            # roi2 = ((frame[200:150, 200:150]))
-            # roi = ((frame[-size-175:-175, -size-40:-40]))
-            # roi2 = ((frame[-size-175:-175, -size-450:-450]))
-            # # Set an index of where the mask is
-            # roi[np.where(mask)] = 0
-            # roi2[np.where(mask2)] = 0
-            # roi += logo
-            # roi2 += logo2
-            # print(mask)
-            # title = 'photogrammetry'
-            # start_point = (0,0)
-            # end_point = (250,250)
-            # color = (0, 255, 0)
-            # thickness = 9
-            # bar = cv2.line(video, start_point, end_point, color, thickness)
-            # cv2.imshow(title, bar)
-            # cv2.line()
-            ret, frame = video.read()
+            # ret, frame = video.read() #***********
             # width = int(video.get(1))
             # height = int(video.get(2))
-            bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5)
-            bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)
-            cv2.imshow('screenshot', bar)
-            cv2.imshow('screenshot', bar2)
+            # bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
+            # bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+            # cv2.imshow('photogrammetry', bar)#***************
+            # cv2.imshow('photogrammetry', bar2)#***************
 
             if ret:
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
