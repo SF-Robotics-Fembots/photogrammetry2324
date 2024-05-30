@@ -98,8 +98,8 @@ class MainWindow(QWidget):
             if ret == True:
                 #out.write(frame)
                 # cv2.imshow('frame', frame)
-                bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-                bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+                bar = cv2.line(frame, (140, 70), (140, 170), (0, 255, 0,), 4) #***************
+                bar2 = cv2.line(frame, (190, 70), (190, 170), (0, 255, 0,), 4)#***************
                 cv2.imshow('bars', bar)#***************
                 cv2.imshow('bars', bar2)#***************
                 if cv2.waitKey(1) & 0xFF == ord('q'):
