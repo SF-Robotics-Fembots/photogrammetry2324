@@ -98,6 +98,9 @@ class MainWindow(QWidget):
             if ret == True:
                 #out.write(frame)
                 # cv2.imshow('frame', frame)
+                for i in range(11):
+                   line = cv2.line(frame, (-0.0011*(i+1)**2 +0.2512*(i+1)+36.675, 70), (-0.0011*(i+1)**2 +0.2512*(i+1)+36.675, 170), (0, 0, 244), 12)
+                   
                 bar = cv2.line(frame, (448, 224), (448, 544), (0, 255, 0,), 12) #***************
                 bar2 = cv2.line(frame, (608, 224), (608, 544), (0, 255, 0,), 12)#***************
                 cv2.imshow('bars', bar)#***************
