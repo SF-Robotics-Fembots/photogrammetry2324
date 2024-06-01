@@ -71,17 +71,17 @@ class MainWindow(QWidget):
         cv2.destroyAllWindows()
 
     def screenshot(self):
-            #titles = pygetwindow.getAllTitles() #prob dont need this
-            random = int(time.time())
-            file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
-            window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-            left, top = window.topleft
-            right, bottom = window.bottomright
-            pg.screenshot(file)
-            im = Image.open(file)
-            im = im.crop((left+19, top+42, right-19, bottom-106))
-            im.save(file)
-            im.show(file)
+        #titles = pygetwindow.getAllTitles() #prob dont need this
+        random = int(time.time())
+        file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
+        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
+        left, top = window.topleft
+        right, bottom = window.bottomright
+        pg.screenshot(file)
+        im = Image.open(file)
+        im = im.crop((left+19, top+42, right-19, bottom-106))
+        im.save(file)
+        im.show(file)
 
     def showBars(self):
         video = cv2.VideoCapture(0)
@@ -89,8 +89,8 @@ class MainWindow(QWidget):
         ret, frame = video.read()
         bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
         bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(frame, bar)#***************
-        cv2.imshow(frame, bar2)#***************
+        cv2.imshow(window, bar)#***************
+        cv2.imshow(window, bar2)#***************
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
