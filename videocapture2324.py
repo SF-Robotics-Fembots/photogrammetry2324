@@ -81,8 +81,8 @@ class MainWindow(QWidget):
 
     def screenshot(self):
             #titles = pygetwindow.getAllTitles() #prob dont need this
-            random = int(time.time())
-            file = "D:/screenshots" + str(random) + ".png"
+            random = int(time.time()) #C:\Users\kthog\Downloads\screenshots
+            file = "C:/Users/kthog/Downloads/screenshots" + str(random) + ".png"
             window = pygetwindow.getWindowsWithTitle('bars')[0]
             left, top = window.topleft
             right, bottom = window.bottomright
@@ -98,8 +98,8 @@ class MainWindow(QWidget):
             if ret == True:
                 #out.write(frame)
                 # cv2.imshow('frame', frame)
-                bar = cv2.line(frame, (140, 70), (140, 170), (0, 255, 0,), 4) #***************
-                bar2 = cv2.line(frame, (190, 70), (190, 170), (0, 255, 0,), 4)#***************
+                bar = cv2.line(frame, (448, 224), (448, 544), (0, 255, 0,), 12) #***************
+                bar2 = cv2.line(frame, (608, 224), (608, 544), (0, 255, 0,), 12)#***************
                 cv2.imshow('bars', bar)#***************
                 cv2.imshow('bars', bar2)#***************
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -117,7 +117,7 @@ class MainWindow(QWidget):
             width = int(video.get(3))
             height = int(video.get(4))
             fps = 20
-            out = cv2.VideoWriter("D:/screenshots/vid.avi", cv2.VideoWriter_fourcc('M','J', 'P', 'G'), fps, (width, height))
+            out = cv2.VideoWriter("C:/Users/kthog/Downloads/screenshots/vid.avi", cv2.VideoWriter_fourcc('M','J', 'P', 'G'), fps, (width, height))
 
             while video.isOpened():
                 ret, frame = video.read()
@@ -174,11 +174,11 @@ class Worker1(QThread):
                 Image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 FlippedImage = cv2.flip(Image, 1)
                 ConvertToQtFormat = QImage(FlippedImage.data, FlippedImage.shape[1], FlippedImage.shape[0], QImage.Format_RGB888)
-                Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                Pic = ConvertToQtFormat.scaled(1024, 768, Qt.KeepAspectRatio)
                 #emit thread
                 self.ImageUpdate.emit(Pic)
-                bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-                bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
+                bar = cv2.line(frame, (896, 640), (896, 960), (0, 255, 0,), 16) #***************
+                bar2 = cv2.line(frame, (1136, 640), (1136, 960), (0, 255, 0,), 16)#***************
                 cv2.imshow('screenshot', bar)#***************
                 cv2.imshow('screenshot', bar2)#***************
 
