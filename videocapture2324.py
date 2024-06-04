@@ -80,28 +80,6 @@ class MainWindow(QWidget):
         cv2.destroyAllWindows()
 
     def screenshot(self):
-<<<<<<< HEAD
-        #titles = pygetwindow.getAllTitles() #prob dont need this
-        random = int(time.time())
-        file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
-        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-        left, top = window.topleft
-        right, bottom = window.bottomright
-        pg.screenshot(file)
-        im = Image.open(file)
-        im = im.crop((left+19, top+42, right-19, bottom-106))
-        im.save(file)
-        im.show(file)
-
-    def showBars(self):
-        video = cv2.VideoCapture(0)
-        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-        ret, frame = video.read()
-        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(window, bar)#***************
-        cv2.imshow(window, bar2)#***************
-=======
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time()) #C:\Users\kthog\Downloads\screenshots
             file = "C:/Users/kthog/Downloads/screenshots" + str(random) + ".png"
@@ -122,8 +100,8 @@ class MainWindow(QWidget):
                 # cv2.imshow('frame', frame)
                 #for i in range(11):
                 i = 0
-                bar = cv2.line(frame, (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+36.675)/3.2), 70), 
-                                (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+36.675)/3.2), 170), 
+                bar = cv2.line(frame, (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+33.675)/3.2), 70), 
+                                (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+33.675)/3.2), 170), 
                                 (0, 0, 244), 4)
                 cv2.imshow('bars', bar)
                    #for j in range(10):
@@ -170,7 +148,6 @@ class MainWindow(QWidget):
             out.release()
 
             cv2.destroyWindow('screenrecord')
->>>>>>> 8042f5e48a2fa864c87d11474979bc8f4c9f571b
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
