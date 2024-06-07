@@ -15,10 +15,12 @@ import pygetwindow
 from PIL import Image
 import numpy as np
 
-video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
+video = cv2.VideoCapture(0)
+#video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
 bars = False
 #ret, frame = video.read()
 #create main window object
+
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -45,7 +47,6 @@ class MainWindow(QWidget):
         self.VBL.addWidget(self.CancelBTN)
         self.CancelBTN.clicked.connect(self.CancelFeed)
         self.VBL.addWidget(self.CancelBTN)
-
         #define worker1 thread in main program
         self.Worker1 = Worker1()
 
@@ -80,28 +81,6 @@ class MainWindow(QWidget):
         cv2.destroyAllWindows()
 
     def screenshot(self):
-<<<<<<< HEAD
-        #titles = pygetwindow.getAllTitles() #prob dont need this
-        random = int(time.time())
-        file = "C:/Users/rosar/Downloads/guiSS/" + str(random) + ".png"
-        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-        left, top = window.topleft
-        right, bottom = window.bottomright
-        pg.screenshot(file)
-        im = Image.open(file)
-        im = im.crop((left+19, top+42, right-19, bottom-106))
-        im.save(file)
-        im.show(file)
-
-    def showBars(self):
-        video = cv2.VideoCapture(0)
-        window = pygetwindow.getWindowsWithTitle('photogrammetry')[0]
-        ret, frame = video.read()
-        bar = cv2.line(frame, (280, 200), (280, 300), (0, 255, 0,), 5) #***************
-        bar2 = cv2.line(frame, (355, 200), (355, 300), (0, 255, 0,), 5)#***************
-        cv2.imshow(window, bar)#***************
-        cv2.imshow(window, bar2)#***************
-=======
             #titles = pygetwindow.getAllTitles() #prob dont need this
             random = int(time.time()) #C:\Users\kthog\Downloads\screenshots
             file = "C:/Users/kthog/Downloads/screenshots" + str(random) + ".png"
@@ -115,26 +94,52 @@ class MainWindow(QWidget):
             im.show(file)
 
     def showBars(self):
+        lineArray = [6, 18, 30, 43, 56, 70, 85, 99, 114, 129, 160, 191, 206, 221, 236, 251, 265, 279, 292, 305, 317]
+        labelArray = ['10.78', '11.54', '12.24', '12.87', '13.43', '13.93', '14.33', '14.68', '14.95', '15.16', '15.29', '15.35', '15.35', '15.28', '15.13', '14.91', '14.63', '14.27', '13.84', '13.34', '12.77', '12.13', '11.42']
         while video.isOpened():
             ret, frame = video.read()
             if ret == True:
                 #out.write(frame)
                 # cv2.imshow('frame', frame)
                 #for i in range(11):
-                i = 0
-                bar = cv2.line(frame, (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+36.675)/3.2), 70), 
-                                (int((-0.0011*((i+1)*10)**2 +0.2512*((i+1)*10)+36.675)/3.2), 170), 
-                                (0, 0, 244), 4)
-                cv2.imshow('bars', bar)
+                # i = 0
+                # val = int(((-0.0011*(((i+1)*10)**2)) + (0.2512*((i+1)*10))+36.675)/3.2)
+                # bar = cv2.line(frame, (val, 70), 
+                #                 (val, 170), 
+                #                 (0, 0, 244), 4)
+                # print(str(val))
+                # cv2.imshow('bars', bar)q
                    #for j in range(10):
                     #    bar2 = cv2.line(frame, (int(-0.0011*((j+1) + (i*10))**2 +0.2512*((j+1) + (i*10))+36.675), 70),
                                         #  (int(-0.0011*((j+1) + (i*10))**2 +0.2512*((j+1) + (i*10))+36.675), 170), 
                                          # (0, 244, 0), 2)
                         #cv2.imshow('bars', bar2)
-                #bar = cv2.line(frame, (448, 224), (448, 544), (0, 255, 0,), 12) #***************
-                #bar2 = cv2.line(frame, (608, 224), (608, 544), (0, 255, 0,), 12)#***************
-                #cv2.imshow('bars', bar)#***************
-                #cv2.imshow('bars', bar2)#***************
+                # bar = cv2.line(frame, (448, 224), (448, 544), (0, 255, 0,), 12) #***************
+                # bar2 = cv2.line(frame, (608, 224), (608, 544), (0, 255, 0,), 12)#***************
+                bar = cv2.line(frame, (145, 70), (145, 170), (0, 255, 0,), 1) #***************
+                bar2 = cv2.line(frame, (175, 70), (175, 170), (0, 255, 0,), 1)#***************
+                
+                for x in lineArray:
+                    org = (x, 80)
+                    line = cv2.line(frame, org, (x, 140), (191, 0, 255,), 1)
+                
+                text = cv2.putText(frame, '10.78 11.54 12.24 12.87 13.43 13.93 14.33 14.68 14.95 15.16 15.29 15.35 15.35 15.28 15.13 14.91 14.63 14.27 13.84 13.34 12.77 12.13 11.42', (160, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
+
+                # for y in labelArray & x in lineArray:
+                #     org = (x, 80)
+                #     text = cv2.putText(frame, y, org, cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255), 2, cv2.LINE_AA)
+                
+                cv2.imshow('bars', bar)#***************
+                cv2.imshow('bars', bar2)#***************
+
+                ###########setting window to 320x240
+                # cv2.namedWindow("bars", cv2.WINDOW_AUTOSIZE)            
+                # print(cv2.getWindowImageRect("bars"))     
+                # cv2.resizeWindow('bars', 320, 240) 
+               
+                # if cv2.waitKey(33) & 0xFF == ord('a'):
+                #     cv2.setWindowProperty('bars', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+                #     print("pressed a")
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
@@ -170,7 +175,6 @@ class MainWindow(QWidget):
             out.release()
 
             cv2.destroyWindow('screenrecord')
->>>>>>> 8042f5e48a2fa864c87d11474979bc8f4c9f571b
 
 #makes connection with camera and captures vid
 class Worker1(QThread):
@@ -211,10 +215,10 @@ class Worker1(QThread):
                 Pic = ConvertToQtFormat.scaled(1024, 768, Qt.KeepAspectRatio)
                 #emit thread
                 self.ImageUpdate.emit(Pic)
-                bar = cv2.line(frame, (896, 640), (896, 960), (0, 255, 0,), 16) #***************
-                bar2 = cv2.line(frame, (1136, 640), (1136, 960), (0, 255, 0,), 16)#***************
-                cv2.imshow('screenshot', bar)#***************
-                cv2.imshow('screenshot', bar2)#***************
+                # bar = cv2.line(frame, (896, 640), (896, 960), (0, 255, 0,), 16) #***************
+                # bar2 = cv2.line(frame, (1136, 640), (1136, 960), (0, 255, 0,), 16)#***************
+                # cv2.imshow('screenshot', bar)#***************
+                # cv2.imshow('screenshot', bar2)#***************
 
     def stop(self):
         self.ThreadActive = False
