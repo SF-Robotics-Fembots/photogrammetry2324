@@ -15,8 +15,8 @@ import pygetwindow
 from PIL import Image
 import numpy as np
 
-#video = cv2.VideoCapture(0)
-video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
+video = cv2.VideoCapture(0)
+#video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
 bars = False
 #ret, frame = video.read()
 #create main window object
@@ -96,11 +96,13 @@ class MainWindow(QWidget):
     def showBars(self):
         lineArray = [6, 18, 30, 43, 56, 70, 85, 99, 114, 129, 145, 160, 175, 191, 206, 221, 236, 251, 265, 279, 292, 305, 317]
         #lineArray = [30, 60, 92, 122, 160, 197, 231, 261]
+        lineHorizontal = [74, 89, 105, 120, 135, 151, 166, 181, 195, 210, 225, 240, 254, 267, 279]
+       # lineHorizontal = [6, 18, 30, 43, 56, 70, 85, 99, 114, 129, 145, 160, 175, 191, 206, 221, 236, 251, 265, 279, 292, 305, 317]
         labelArray = ['10.78', '11.54', '12.24', '12.87', '13.43', '13.93', '14.33', '14.68', '14.95', '15.16', '15.29', '15.35', '15.35', '15.28', '15.13', '14.91', '14.63', '14.27', '13.84', '13.34', '12.77', '12.13', '11.42']
         while video.isOpened():
             ret, frame = video.read()
             if ret == True:
-                frame = cv2.rotate(frame, cv2.ROTATE_180)
+                #frame = cv2.rotate(frame, cv2.ROTATE_180)
                 #green lines
                 bar = cv2.line(frame, (135, 70), (135, 170), (0, 255, 0,), 1) #***************
                 bar2 = cv2.line(frame, (185, 70), (185, 170), (0, 255, 0,), 1)#***************
@@ -108,6 +110,10 @@ class MainWindow(QWidget):
                 for x in lineArray:
                     org = (x, 80)
                     line = cv2.line(frame, org, (x, 140), (191, 0, 255,), 1)
+
+                for y in lineHorizontal:
+                    org = (140, y)
+                    line = cv2.line(frame, org, (180, y), (191, 0, 255,), 1)
                 
                 #trying to add labels
                 # font_size = 0.25
