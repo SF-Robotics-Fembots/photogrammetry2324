@@ -130,7 +130,12 @@ class MainWindow(QWidget):
                     org = (x, 80)
                     line = cv2.line(frame, org, (x, 140), (191, 0, 255,), 1)
                 
-                text = cv2.putText(frame, '10.78 11.54 12.24 12.87 13.43 13.93 14.33 14.68 14.95 15.16 15.29 15.35 15.35 15.28 15.13 14.91 14.63 14.27 13.84 13.34 12.77 12.13 11.42', (160, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
+                #trying to add labels
+                # font_size = 0.25
+                # font_thickness = int(0.015)
+                # textBot = cv2.putText(frame, '10.8 12.2 13.4 14.3 14.9 15.3 15.4 15.1 14.6 13.8 12.8 11.4', (2, 155), cv2.FONT_HERSHEY_COMPLEX, font_size, (0, 255, 255), font_thickness, cv2.LINE_AA)
+                # textTop = cv2.putText(frame, '11.5  12.9  13.9  14.7  15.2  15.4  15.3  14.9  14.3  13.3  12.1', (10, 75), cv2.FONT_HERSHEY_COMPLEX, font_size, (0, 255, 255), font_thickness, cv2.LINE_AA)
+
 
                 # for y in labelArray & x in lineArray:
                 #     org = (x, 80)
