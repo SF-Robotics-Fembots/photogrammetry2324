@@ -99,6 +99,7 @@ class MainWindow(QWidget):
         while video.isOpened():
             ret, frame = video.read()
             if ret == True:
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
                 #out.write(frame)
                 # cv2.imshow('frame', frame)
                 #for i in range(11):
