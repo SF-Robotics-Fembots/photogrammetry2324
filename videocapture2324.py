@@ -15,8 +15,8 @@ import pygetwindow
 from PIL import Image
 import numpy as np
 
-video = cv2.VideoCapture(0)
-#video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
+#video = cv2.VideoCapture(0)
+video = cv2.VideoCapture("http://192.168.1.99:8084/stream")
 bars = False
 #ret, frame = video.read()
 #create main window object
